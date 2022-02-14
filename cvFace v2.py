@@ -10,11 +10,11 @@ from sqliteCon import SqliteObject
 
 sqliteObject = None
 
-
 # Make array of sample pictures with encodings
 known_face_encodings = []
 known_face_names = []
 known_face_filenames = []
+
 
 # Convert object to a string according to a given format
 def time_format(string):
@@ -25,32 +25,31 @@ def time_format(string):
 def format_time(string):
     return datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
 
-#we'll want an automated process for adding faces so well need to give a folder which will hold pics/names
 
-#add file names to known_face_names
-#the os.walk generates the file names in a directory by "walking" the tree from bottom to top
+# we'll want an automated process for adding faces so well need to give a folder which will hold pics/names
+
+# add file names to known_face_names
+# the os.walk generates the file names in a directory by "walking" the tree from bottom to top
 for (dirpath, dirnames, filenames) in os.walk('users/images/'):
     known_face_filenames.extend(filenames)
     break
 
-
 for filename in known_face_filenames:
-    #loading the files
+    # loading the files
     face = face_recognition.load_image_file('users/images/' + filename)
-    #then take the names and add it to the known_face_names
-    #can always change the syntax later
-    known_face_names.append(re.sub("[0-9]",'', filename[:-4]))
-    #and then encode the face
+    # then take the names and add it to the known_face_names
+    # can always change the syntax later
+    known_face_names.append(re.sub("[0-9]", '', filename[:-4]))
+    # and then encode the face
     known_face_encodings.append(face_recognition.face_encodings(face)[0])
 
-
-#for nameless aka unknown
-#Load picture
+# for nameless aka unknown
+# Load picture
 face_picture = face_recognition.load_image_file("users/images/user-one.jpg")
-#Detect faces
+# Detect faces
 face_locations = face_recognition.face_locations(face_picture)
-#Encore faces
-face_encodings = face_recognition.face_encodings(face_picture, face_locations)   
+# Encore faces
+face_encodings = face_recognition.face_encodings(face_picture, face_locations)
 
 # Loop in all detected faces
 for face_encoding in face_encodings:
@@ -103,14 +102,10 @@ for face_encoding in face_encodings:
                 # Save the name of the best match
                 name = known_face_names[best_match_index]
 
-
         # Store the name array to display later
         face_names.append(name)
         # process every frame only once
         ret = not ret
-
-
-
 
         # Display the results
         for (top, right, bottom, left), name in zip(locations, face_names):
@@ -122,17 +117,14 @@ for face_encoding in face_encodings:
         # Display the resulting image
         cv2.imshow('Video', img)
 
-    # Release webcam
-    # Press q to stop
+        # Release webcam
+        # Press q to stop
         if cv2.waitKey(1) & 0xFF == ord('q'):
-                #sqliteObject.cur.close()
-                #sqliteObject.con.close()
-                # Close camera
-                cap.release()
-                # Close windows
-                cv2.destroyAllWindows()
-                # End loop
-                break
-
-
-
+            # sqliteObject.cur.close()
+            # sqliteObject.con.close()
+            # Close camera
+            cap.release()
+            # Close windows
+            cv2.destroyAllWindows()
+            # End loop
+            break
