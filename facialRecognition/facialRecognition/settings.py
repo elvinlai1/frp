@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #local apps
+    'facialRecognition'
 ]
 
 MIDDLEWARE = [
@@ -79,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', #psycopg2 lib needs to be installed 
         'NAME': 'myproject',
         'USER': 'myprojectuser',
-        'PASSWORD': 'password1', #actual password
+        'PASSWORD': '1218', #actual password
         'HOST': 'localhost',
         'PORT': '5432',
     }
