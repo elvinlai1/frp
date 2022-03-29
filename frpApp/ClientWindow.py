@@ -167,12 +167,6 @@ class VideoThread(QThread):
         self.wait()
 
 class Ui_ClientWindow(object):
-    def openAdminPanel(self):
-        self.window = QtWidgets.QMainWindow()
-        self.ui = Ui_AdminPanel()
-        self.ui.setupUi(self.window)
-        self.window.show()
-
     def setupUi(self, ClientWindow):
         ClientWindow.setObjectName("ClientWindow")
         ClientWindow.setEnabled(True)
