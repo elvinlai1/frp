@@ -2,10 +2,10 @@ import psycopg2
 import pickle
 
 class Database: 
-    #connect to Postgresql
+    #ensure all parameters are correct
     conn = psycopg2.connect("dbname=myproject user=myprojectuser password=password1 host=localhost")
 
-    def check_connection(self):
+    def check_Connection(self):
         try:
             cur = self.conn.cursor()
             print('PostgreSQL database version:')
@@ -15,7 +15,7 @@ class Database:
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
-    def create_faceTable(self):
+    def create_FaceTable(self):
         sql = ( 
             """
             CREATE TABLE face(
@@ -39,17 +39,31 @@ class Database:
             if self.conn is not None:
                 self.conn.close()
 
-    def create_metadataTable(self):
+    def create_Timestamps(self):
         sql = ( 
             """
-            CREATE TABLE employeeClock(
-            emp_num VARCHAR PRIMARY KEY,
-                TEXT NOT NULL, 
-            emp_encodings BYTEA NOT NULL
+            CREATE TABLE timestamps(
+            emp_num VARCHAR NOT NULL,
+            emp_timestamp VARCHAR NOT NULL,
+            emp_status VARCHAR NOT NULL
             );
             """
         )
-    def registerNewFace(self, empNum, empName, face):
+        try:
+            cur = self.conn.cursor()
+            # create table one by one
+            cur.execute(sql)
+            # close communication with the PostgreSQL database server
+            cur.close()
+            # commit the changes
+            self.conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if self.conn is not None:
+                self.conn.close()
+
+    def register_NewFace(self, emp_num, emp_name, emp_face):
         sql = ( 
             """
             INSERT INTO face (emp_num, emp_name, emp_encodings)VALUES(%s,%s,%s);
@@ -57,7 +71,7 @@ class Database:
         )
         try: 
             cur = self.conn.cursor()
-            cur.execute(sql,[empNum, empName, pickle.dumps(face),])
+            cur.execute(sql,[emp_num, emp_name, pickle.dumps(emp_face),])
             self.conn.commit()
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -66,39 +80,20 @@ class Database:
             if self.conn is not None:
                 self.conn.close()
 
-    def getEmp(self, emp_encodings):
-        sql = ( """
-                SELECT emp_num FROM face WHERE emp_encodings = %s
-                """
+    def register_Timestamp(self, emp_num, ts, emp_status):
+        sql = ( 
+            """
+            INSERT INTO timestamps (emp_num, emp_timestamp, emp_status)VALUES(%s,%s,%s);
+            """
         )
         try: 
             cur = self.conn.cursor()
-            cur.execute(sql,[emp_encodings,])
-
-            face = pickle.loads(cur.fetchone()[0])
-            return face
-            cur.close()
+            cur.execute(sql,[emp_num, ts, emp_status,])
+            self.conn.commit()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
-
-    def getEmpFace(self, empNum):
-        sql = ( """
-                SELECT emp_encodings FROM face WHERE emp_num = %s
-                """
-        )
-        try: 
-            cur = self.conn.cursor()
-            cur.execute(sql,[empNum,])
-
-            face = pickle.loads(cur.fetchone()[0])
-            return face
-            cur.close()
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-  
-
-    def getAllFaces(self):
+    def get_AllFaces(self):
         sql = ( """
                 SELECT * FROM face; 
                 """
@@ -111,12 +106,36 @@ class Database:
             for x in f:
                 l = [x[0], x[1], pickle.loads(x[2])]
                 faces.append(l)
-
-
             return faces
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
+
+    def get_AllTimestamp(self, emp_num):
+        sql = ( """
+                SELECT * FROM timestamps WHERE emp_num = %s ORDER BY emp_timestamp DESC; 
+                """
+        )
+        try: 
+            cur = self.conn.cursor()
+            cur.execute(sql,[emp_num,])
+            return cur.fetchall()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+    def get_LastTimestamp(self, emp_num):
+        sql = ( """
+                SELECT * FROM timestamps WHERE emp_num = %s ORDER BY emp_timestamp DESC LIMIT 1; 
+                """
+        )
+        try: 
+            cur = self.conn.cursor()
+            cur.execute(sql,[emp_num,])
+            return cur.fetchall()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+ 
       
 
 
