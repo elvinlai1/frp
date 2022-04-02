@@ -20,4 +20,5 @@ from Myapp.views import index
 urlpatterns = [
     re_path(r'^$', index.indexView),
     path('admin/', include('Myapp.urls', ), name="admin"),
+    path("accounts/", include("django.contrib.auth.urls")), #for auth
 ]

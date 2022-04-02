@@ -243,3 +243,6 @@ LOGGING = {
         },
     },
 }
+# to redirect after login
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
