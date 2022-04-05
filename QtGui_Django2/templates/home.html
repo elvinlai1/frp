@@ -1,6 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
+<!--prevents user from access before login-->
+{% block content %}
+{% if user.is_authenticated %}
+
+
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -69,7 +75,8 @@
                         <i class="bi bi-person-fill"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <!-- Log out here -->
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Log Out, {{ user.username }}?</a></li>
                         <li><a class="dropdown-item" href="#">Another action</a></li>
                         <li>
                             <a class="dropdown-item" href="#">Something else here</a>
@@ -230,3 +237,9 @@
 </script>
 </body>
 </html>
+<!-- if not logged in will take you to log in page -->
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}
