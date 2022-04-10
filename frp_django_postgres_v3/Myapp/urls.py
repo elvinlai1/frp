@@ -4,6 +4,7 @@ from .views import export
 from .views import home
 
 urlpatterns = [
+    path('register', index.indexRegisterView),
     path('index', index.indexView),
     path('home', home.queryWorkList),
     path('queryList', home.queryWorkListByName),

@@ -4,6 +4,7 @@ from Myapp.models.race_user import User
 from Myapp.models.race_work import ClockList
 from Myapp.utils.timeUtils import time_format
 
+
 # request.user.is_authenticated()
 def isBlank(params):
     if params is None:
@@ -24,15 +25,19 @@ def indexView(request):
             'id': wk.id,
             'employee': wk.employee,
             'work_time': wk.work_time,
-            'status': True if not(isBlank(wk.in_time)) and not(isBlank(wk.out_time)) else False
+            'status': True if not (isBlank(wk.in_time)) and not (isBlank(wk.out_time)) else False
         })
     # count user in each department
-    department_user = User.objects.values('department').annotate(count=Count('first_name')).values('department', 'count')
+    department_user = User.objects.values('department').annotate(count=Count('first_name')).values('department',
+                                                                                                   'count')
     # get departments detail
     for prt in department_user:
         count = ClockList.objects.filter(work_time__contains=current_date,
-                                    department__iexact=prt['department']).distinct().count()
+                                         department__iexact=prt['department']).distinct().count()
         prt['work'] = count
         prt['not_work'] = prt['count'] - count
     return render(request, 'index.html', locals())
 
+
+def indexRegisterView(request):
+    return render(request=request, template_name='register.html', context=locals())
