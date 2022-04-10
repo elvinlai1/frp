@@ -1,6 +1,9 @@
+{% if user.is_authenticated %}
+
 {% include 'navbar.html' %}
 
 {% block content %}
+
 
         <!-- offcanvas -->
         <main class="mt-5 pt-3">
@@ -137,3 +140,6 @@
         <script>
         </script>
 {% endblock %}
+{% else %}
+{% include 'registration/out.html' %}
+{% endif %}

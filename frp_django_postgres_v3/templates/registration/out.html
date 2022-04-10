@@ -12,19 +12,18 @@
     <title>Log In</title>
     <style>
         body {
-          background-color: #e2e2e2;
+            background-color: #e2e2e2;
         }
-        </style>
+    </style>
 </head>
 <body>
     <div class="container-fluid mt-5">
         <div class ="text-center">
             <div class="form-group">
-                    <h1 class=" text-uppercase fw-bold">Log In</h1>
+                    <h1 class=" text-uppercase fw-bold">You are not logged in</h1>
                 <form method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button class="btn btn-primary mb-2" type="submit">Log In</button>
+
+                    <a href="{% url 'login' %}" class="btn btn-primary active" role="button" >Log In</a>
                 </form>
             </div>
         </div>  

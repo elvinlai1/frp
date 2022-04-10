@@ -1,11 +1,4 @@
 {% load static %}
-
-{% if user.is_authenticated %}
-{% else %}
-<p>You are not logged in</p>
-<a href="{% url 'login' %}">Log In</a>
-{% endif %}
-
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -128,7 +121,3 @@
 <script src="/static/js/jquery-3.5.1.js"></script>
 <script src="/static/js/script.js"></script>
 
-
-{% block content %}
-   
-{% endblock %}
