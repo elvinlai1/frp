@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class ClockList(models.Model):
     id = models.AutoField(primary_key=True)
     employee = models.CharField(max_length=30)

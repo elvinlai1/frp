@@ -1,20 +1,22 @@
 from django.urls import path, re_path
-from .views import index, users
+from .views import index, employees
 from .views import export
-from .views import home
+from .views import activity
+from .views import test
 
 urlpatterns = [
-    path('register', index.indexRegisterView),
+    path('register', index.RegisterView, name="register"),
     path('index', index.indexView),
-    path('home', home.queryWorkList),
-    path('queryList', home.queryWorkListByName),
-    path('export', export.exportView),
-    path('employee', users.indexView, name="users"),
+    path('activity', activity.queryWorkList, name="activity"),
+    path('queryList', activity.queryWorkListByName),
+    path('export', export.exportView, name="export"),
+    path('employees', employees.indexView, name="employees"),
     path('exportExcel', export.exportExcel),
-    path('clock/edit/<int:id>', home.editClockItem, name="editClock"),
-    path('clock/addView', home.addClockItem, name="addView"),
-    path('clock/delete/<int:id>', home.delClockItem, name="delClock"),
-    path('clock/edit', home.editHandler, name="delClockHandler"),
-    path('clock/add', home.addHandler, name="addClockHandler"),
-    path('employee/del', users.deleteEmployee, name="deleteEmployee"),
+    path('clock/edit/<int:id>', activity.editClockItem, name="editClock"),
+    path('clock/addView', activity.addClockItem, name="addView"),
+    path('clock/delete/<int:id>', activity.delClockItem, name="delClock"),
+    path('clock/edit', activity.editHandler, name="delClockHandler"),
+    path('clock/add', activity.addHandler, name="addClockHandler"),
+    path('employee/del', employees.deleteEmployee, name="deleteEmployee"),
+    path('test', test.index, name="test"),
 ]

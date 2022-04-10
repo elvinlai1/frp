@@ -17,7 +17,6 @@ class User(models.Model):
     class Meta(object):
         # define table name
         db_table = 'race_user'
-        # Database table name set to 'user'
+        # Database table name set 
         verbose_name = 'user'
-        # Set 'user' plural to be 'user'）
-        verbose_name_plural = verbose_name
+    

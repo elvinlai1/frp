@@ -39,5 +39,5 @@ def indexView(request):
     return render(request, 'index.html', locals())
 
 
-def indexRegisterView(request):
-    return render(request=request, template_name='register.html', context=locals())
+def RegisterView(request):
+    return render(request, 'register.html')
