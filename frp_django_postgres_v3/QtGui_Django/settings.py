@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'Myapp.apps.MyappConfig',
+    'crispy_forms', #for registration form
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4' #for registration form
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
