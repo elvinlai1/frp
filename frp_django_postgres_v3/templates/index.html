@@ -1,9 +1,6 @@
-{% if user.is_authenticated %}
-
 {% include 'navbar.html' %}
 
 {% block content %}
-
 <!-- offcanvas -->
 <main class="mt-5 pt-3">
     <div class="container-fluid">
@@ -84,9 +81,11 @@
     </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/jquery-3.5.1.js"></script>
 <script src="/static/js/jquery.dataTables.min.js"></script>
 <script src="/static/js/dataTables.bootstrap5.min.js"></script>
-
+<script src="/static/js/script.js"></script>
 <script>
     window.onpageshow = function (event) {
         if (event.persisted) {
@@ -94,8 +93,4 @@
         }
     }
 </script>
-
 {% endblock %}
-{% else %}
-{% include 'registration/out.html' %}
-{% endif %}
