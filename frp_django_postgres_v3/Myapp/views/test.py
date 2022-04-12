@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from Myapp.models.Employees import Employees
+from Myapp.models.employees import Employees
 from Myapp.models.timestamps import Timestamps
 
 from datetime import datetime
@@ -13,34 +13,46 @@ def index(request):
 
 
 
-    # Load all Timestamps find all in
+    # Recent Activity Log
     employees = Employees.objects.all()
     timestamps = Timestamps.objects.all()
 
     emp_activity=[]
     for e,ts in zip(employees,timestamps):
 
-        emp_ts = datetime.fromtimestamp(float(ts.emp_timestamp))
+        emp_ts = datetime.fromtimestamp(float(ts.timestamp))
         time = emp_ts.strftime("%H:%M:%S")
+        date = emp_ts.strftime("%m/%d/%y")
 
         emp_activity.append({
-            'emp_num':e.emp_num,
-            'emp_name':e.emp_name,
+            'name':e.employee_number,
+            'number':e.employee_name,
             'department':e.department,
+            'date': date,
             'time':time,
-            'status': ts.emp_status
+            'status': ts.status
+        })
+
+    emp = Timestamps.objects.filter(employee_number=100)
+
+    emp2 = []
+    for e in emp: 
+
+        emp_ts2 = datetime.fromtimestamp(float(e.timestamp))
+        time = emp_ts2.strftime("%H:%M:%S") 
+        date = emp_ts.strftime("%m/%d/%y")   
+
+        emp2.append({
+            'number':e.employee_number,
+            'date':date,
+            'time':time,
+            'status':e.status
         })
 
 
 
 
-    # Get emp_num and find department 
 
-    
-
-    #------------
-    # Activity 
-    # All Employee activity by most recent hour(?)  
 
 
     #Export Lists

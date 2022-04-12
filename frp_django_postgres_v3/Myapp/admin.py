@@ -6,7 +6,7 @@ from Myapp.models.race_user import User
 from Myapp.models.race_work import ClockList
 
 from Myapp.models.face import Face
-from Myapp.models.Employees import Employees
+from Myapp.models.employees import Employees
 from Myapp.models.timestamps import Timestamps
 
 admin.site.register(User)
