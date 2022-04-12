@@ -1,0 +1,55 @@
+{% if user.is_authenticated %}
+<!--  If user is authenticated execute content below--> 
+
+{% load static %}
+
+{% include 'navbar.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}    
+
+<main class="mt-5 pt-3">
+
+  <body>
+    <div class="container">
+      <form id="form" class="form" method="POST">
+        {% csrf_token %}
+        <h2>Register User</h2>
+        <div class="form-control" >
+          <label>{{ form.first_name.label }}</label>
+          <div {% if form.first_name.errors %} style="border: 2px solid red;border-radius: 4px;"{% endif %}>{{ form.first_name }}</div>
+          <div style="font-size:12px;color:red;">{{ form.first_name.errors }}</div>
+        </div>
+        <div class="form-control">
+            <label>{{ form.last_name.label }}</label>
+            <div {% if form.last_name.errors %} style="border: 2px solid red;border-radius: 4px;"{% endif %}>{{ form.last_name }}</div>
+            <div style="font-size:12px;color:red;">{{ form.last_name.errors }}</div>
+          </div>
+        <div class="form-control">
+          <label>{{ form.email.label }}</label>
+          <div {% if form.email.errors %} style="border: 2px solid red;border-radius: 4px;"{% endif %}>{{ form.email }}</div>
+          <div style="font-size:12px;color:red;">{{ form.email.errors }}</div>
+        </div>
+        <div class="form-control">
+          <label>{{ form.department.label }}</label>
+          <div {% if form.department.errors %} style="border: 2px solid red;border-radius: 4px;"{% endif %}>{{ form.department }}</div>
+          <div style="font-size:12px;color:red;">{{ form.department.errors }}</div>
+        </div>
+        <div class="form-control">
+            <label>{{ form.wage_per_hour.label }}</label>
+            <div {% if form.wage_per_hour.errors %} style="border: 2px solid red;border-radius: 4px;"{% endif %}>{{ form.wage_per_hour }}</div>
+            <div style="font-size:12px;color:red;">{{ form.wage_per_hour.errors }}</div>
+          </div>
+        <input id="button" type="submit" value="Submit" />
+      </form>
+    </div>
+  </body>
+</html>
+</main>
+{% endblock %}
+
+<!-- Else send to Log in page--> 
+{% else %}
+{% include 'registration/out.html' %}
+{% endif %} 
