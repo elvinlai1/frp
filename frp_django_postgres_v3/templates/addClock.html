@@ -1,3 +1,8 @@
+{% if user.is_authenticated %}
+<!--  If user is authenticated execute content below--> 
+
+{% load static %}
+
 {% include 'navbar.html' %}
 
 {% block content %}
@@ -172,3 +177,8 @@
         <script>
         </script>
 {% endblock %}
+
+<!-- Else send to Log in page--> 
+{% else %}
+{% include 'registration/out.html' %}
+{% endif %} 

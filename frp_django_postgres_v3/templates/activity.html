@@ -1,5 +1,9 @@
-{% include 'navbar.html' %}
+{% if user.is_authenticated %}
+<!--  If user is authenticated execute content below--> 
 
+{% load static %}
+
+{% include 'navbar.html' %}
 {% block content %}
 <!-- offcanvas -->
 <main class="mt-5 pt-3">
@@ -92,7 +96,7 @@
                     $("#tbody").html(str)
                 }
             })
-        }
+        };
 
 
 </script>
@@ -107,3 +111,8 @@
 
 </script>
 {% endblock %}
+
+<!-- Else send to Log in page--> 
+{% else %}
+{% include 'registration/out.html' %}
+{% endif %} 
