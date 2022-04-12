@@ -3,9 +3,6 @@ from django.forms import ModelForm
 from Myapp.models.race_user import User
 
 
-
-
-
 class NewUserForm(ModelForm):
 	email = forms.EmailField(required=True)
 

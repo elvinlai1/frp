@@ -1,16 +1,53 @@
+{% if user.is_authenticated %}
+<!--  If user is authenticated execute content below--> 
+
+{% load static %}
+
 {% include 'navbar.html' %}
 
 {% block content %}
     <main class="mt-5 pt-3">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4>Content Row 1</h4>
-                </div>
+
+
+            <div class="mb-3 mt-3">
+                <div class="h3 fw-bold text-primary mb-3">Employee Activity</div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">Employee Number</th>
+                        <th scope="col">Employee Name</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in emp_activity %}
+                    <tr>
+                        <td>{{ item.emp_num }}</td>
+                        <td>{{ item.emp_name }}</td>
+                        <td>{{ item.department }}</td>
+                        <td>{{ item.time }}</td>
+                        <td>{{ item.status }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <div class="row">
-                <h4>Content Row 2</h4>
-            </div>
+
+        
+
+
+
+
+
+            
         </div>
     </main>
 {% endblock %}
+
+<!-- Else send to Log in page--> 
+{% else %}
+{% include 'registration/out.html' %}
+{% endif %} 

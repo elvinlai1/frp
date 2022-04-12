@@ -1,8 +1,8 @@
 from django.db import models
 
-class Users(models.Model):
+class Employees(models.Model):
     emp_num = models.IntegerField(primary_key=True)
-    emp_name = models.CharField(max_length=30)
+    emp_name = models.TextField()
     department = models.CharField(max_length=30)
 
     class Meta(object):
