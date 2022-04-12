@@ -3,7 +3,10 @@ from django.shortcuts import render
 from Myapp.models.race_user import User
 from Myapp.models.race_work import ClockList
 from Myapp.utils.timeUtils import time_format
-
+from Myapp.forms import NewUserForm
+from django.contrib.auth.models import User, auth
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 # request.user.is_authenticated()
 def isBlank(params):
@@ -39,5 +42,14 @@ def indexView(request):
     return render(request, 'index.html', locals())
 
 
-def RegisterView(request):
-    return render(request, 'register.html')
+def register_request(request):
+    if request.method=='POST':
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.info(request, f'Created user {username}') 
+            return render(request, 'register.html', {'form':form})
+    else:
+        form = NewUserForm()
+    return render(request, 'register.html', {'form':form})
