@@ -2,10 +2,11 @@ from django.db.models import Count
 from django.shortcuts import render
 from Myapp.models.race_user import User
 from Myapp.models.race_work import ClockList
+from Myapp.models.employees import Employees
 from Myapp.utils.timeUtils import time_format
 from Myapp.forms import NewUserForm
-from django.contrib.auth.models import User, auth
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 # request.user.is_authenticated()
@@ -43,13 +44,41 @@ def indexView(request):
 
 
 def register_request(request):
+    form = NewUserForm(request.POST)
     if request.method=='POST':
-        form = NewUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.info(request, f'Created user {username}') 
-            return render(request, 'register.html', {'form':form})
+        action = request.POST["action"]
+        if action=="submit":
+            register_employee(request)
+          
+        if action=="delete":
+            delete_employee(request)
+        
     else:
         form = NewUserForm()
     return render(request, 'register.html', {'form':form})
+
+def delete_employee(request):
+    x = request.POST['employee_delete']
+    try:
+        record = Employees.objects.get(employee_number = x)
+        record.delete()
+        messages.success(request, f'Employee Number {x} Deleted')
+        return HttpResponseRedirect('')
+       
+    except:
+        messages.error(request, f'Employee Number {x} does not exist')
+
+def register_employee(request):
+    form = NewUserForm(request.POST)
+    if form.is_valid():
+        form.save()
+        employee_number = form.cleaned_data.get('employee_number')
+        messages.info(request, f'Employee number: {employee_number} created') 
+        return HttpResponseRedirect('')
+    else: 
+        employee_number = request.POST.get('employee_number')
+        messages.error(request, f'Employee number: {employee_number} already exists')
+
+
+
+

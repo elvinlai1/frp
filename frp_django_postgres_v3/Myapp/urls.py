@@ -5,7 +5,7 @@ from .views import activity
 from .views import test
 
 urlpatterns = [
-    path('register', index.register_request, name="register"),
+    path('admin', index.register_request, name="admin"),
     path('index', index.indexView),
     path('activity', activity.queryWorkList, name="activity"),
     path('queryList', activity.queryWorkListByName),

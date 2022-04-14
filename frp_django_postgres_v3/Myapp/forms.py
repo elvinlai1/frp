@@ -1,18 +1,16 @@
 from django import forms
 from django.forms import ModelForm
-from Myapp.models.race_user import User
+from Myapp.models.employees import Employees
 
 
 class NewUserForm(ModelForm):
-	email = forms.EmailField(required=True)
 
 	class Meta:
-		model = User
-		fields = ("first_name","last_name", "email", "department", "wage_per_hour")
+		model = Employees
+		fields = ("employee_number", "employee_name", "department")
 
 	def save(self, commit=True):
-		user = super(NewUserForm, self).save(commit=False)
-		user.email = self.cleaned_data['email']
+		Employees = super(NewUserForm, self).save(commit=False)
 		if commit:
-			user.save()
-		return user
+			Employees.save()
+		return Employees

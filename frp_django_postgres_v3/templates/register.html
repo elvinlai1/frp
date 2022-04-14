@@ -2,7 +2,6 @@
 <!--  If user is authenticated execute content below--> 
 
 {% load static %}
-
 {% include 'navbar.html' %}
 
 {% block content %}
@@ -13,40 +12,47 @@
 
   <body>
     <div class="container">
+      {% for message in messages %}
+      <div class="container-fluid p-0">
+        <div class="alert {{ message.tags }}" role="alert" >
+          {{ message }}
+        </div>
+      </div>
+      {% endfor %}
+
       <form id="form" class="form" method="POST">
         {% csrf_token %}
         <h2>Register User</h2>
-        <div class="form-control" >
-          <label>{{ form.first_name.label }}</label>
-          <div {% if form.first_name.errors %} style="border: 2px solid red;border-radius: 4px;"{% endif %}>{{ form.first_name }}</div>
-          <div style="font-size:12px;color:red;">{{ form.first_name.errors }}</div>
-        </div>
         <div class="form-control">
-            <label>{{ form.last_name.label }}</label>
-            <div {% if form.last_name.errors %} style="border: 2px solid red;border-radius: 4px;"{% endif %}>{{ form.last_name }}</div>
-            <div style="font-size:12px;color:red;">{{ form.last_name.errors }}</div>
+            <label>{{ form.employee_number.label }}</label>
+            <div>{{ form.employee_number }}</div>
+            <label>{{ form.employee_name.label }}</label>
+            <div >{{ form.employee_name }}</div>
+            <label>{{ form.department.label }}</label>
+            <div>{{ form.department }}</div>
+          <input type="hidden" name="action" value="submit">
+          <input class="btn btn-primary" id="button" type="submit" value="Submit" />
+
           </div>
-        <div class="form-control">
-          <label>{{ form.email.label }}</label>
-          <div {% if form.email.errors %} style="border: 2px solid red;border-radius: 4px;"{% endif %}>{{ form.email }}</div>
-          <div style="font-size:12px;color:red;">{{ form.email.errors }}</div>
-        </div>
-        <div class="form-control">
-          <label>{{ form.department.label }}</label>
-          <div {% if form.department.errors %} style="border: 2px solid red;border-radius: 4px;"{% endif %}>{{ form.department }}</div>
-          <div style="font-size:12px;color:red;">{{ form.department.errors }}</div>
-        </div>
-        <div class="form-control">
-            <label>{{ form.wage_per_hour.label }}</label>
-            <div {% if form.wage_per_hour.errors %} style="border: 2px solid red;border-radius: 4px;"{% endif %}>{{ form.wage_per_hour }}</div>
-            <div style="font-size:12px;color:red;">{{ form.wage_per_hour.errors }}</div>
-          </div>
-        <input id="button" type="submit" value="Submit" />
       </form>
-    </div>
+ 
+      <form id="form" class="form" method="POST">
+        {% csrf_token %}
+        <h2>Delete User</h2>
+        <div class="form-control" >
+          <label>Employee Number</label>
+          <input type="number" class="form-control" name="employee_delete">
+          <input type="hidden" name="action" value="delete">
+          <input class="btn btn-primary" id="button" type="submit" value="Delete" />
+        </div>
+
+      </form>
+      
   </body>
 </html>
 </main>
+
+
 {% endblock %}
 
 <!-- Else send to Log in page--> 

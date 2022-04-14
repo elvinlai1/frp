@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from Myapp.models.employees import Employees
 from Myapp.models.timestamps import Timestamps
+from django.contrib import messages
 
 from datetime import datetime
 
@@ -48,10 +49,6 @@ def index(request):
             'time':time,
             'status':e.status
         })
-
-
-
-
 
 
 
