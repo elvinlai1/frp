@@ -6,84 +6,46 @@
 {% include 'navbar.html' %}
 
 {% block content %}
+
 {% load crispy_forms_tags %}    
 
 <!-- offcanvas -->
 <main class="mt-5 pt-3">
     <div class="container-fluid">
         <div class="row">
-            <div class="h4 fw-bold text-primary mb-3">
+            <div class="h4 fw-bold text-uppercase">
                 <h2>Dashboard</h2>
             </div>
         </div>
-        <div class="row">
+        
             <div class="mb-3 mt-3">
                 <div class="h3 fw-bold text-primary mb-3">Recent Activity</div>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">Employee #</th>
+                        <th scope="col">Employee Name</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Last Activity</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for item in work_list %}
+                    {% for item in emp_activity %}
                     <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>
-                            {% if item.status %}
-                            <span
-                                    class="d-inline-block bg-success rounded-circle"
-                                    style="width: 15px;height: 15px"
-                            ></span>
-                            {% else %}
-                            <span
-                                    class="d-inline-block bg-danger rounded-circle"
-                                    style="width: 15px;height: 15px"
-                            ></span>
-                            {% endif %}
-                        </td>
-                        <td>
-                                <span class="text-primary btn btn-sm">
-                                    <a href="/admin/clock/edit/{{ item.id }}">
-                                      {{ item.employee }}
-                                    </a>
-                                </span>
-                        </td>
-                        <td>{{ item.work_time }}</td>
+                        <td>{{ item.number}}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.department }}</td>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.time }}</td>
+                        <td>{{ item.status }}</td>
                     </tr>
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
 
-            <div class="mb-3 mt-3">
-                <div class="h3 fw-bold text-primary mb-3">Departments</div>
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Department Name</th>
-                        <th scope="col">Employees</th>
-                        <th scope="col">In</th>
-                        <th scope="col">Out</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for item in department_user %}
-                    <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>{{ item.department }}</td>
-                        <td>{{ item.count }}</td>
-                        <td>{{ item.work }}</td>
-                        <td>{{ item.not_work }}</td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 </main>
@@ -91,13 +53,7 @@
 <script src="/static/js/jquery.dataTables.min.js"></script>
 <script src="/static/js/dataTables.bootstrap5.min.js"></script>
 
-<script>
-    window.onpageshow = function (event) {
-        if (event.persisted) {
-            window.location.reload();
-        }
-    }
-</script>
+
 {% endblock %}
 <!-- Else send to Log in page--> 
 {% else %}

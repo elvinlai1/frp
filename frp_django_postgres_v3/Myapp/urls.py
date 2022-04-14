@@ -7,7 +7,7 @@ from .views import adminpanel
 
 urlpatterns = [
     path('admin', adminpanel.index, name="admin"),
-    path('', index.indexView),
+    path('', index.indexView, name="index"),
     path('activity', activity.queryWorkList, name="activity"),
     path('queryList', activity.queryWorkListByName),
     path('export', export.exportView, name="export"),
