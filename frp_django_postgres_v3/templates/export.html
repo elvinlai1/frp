@@ -16,10 +16,10 @@
         </div>
         <div class="row">
             <div class="mb-3 d-flex align-items-center">
-                <button type="button" class="btn btn-primary me-5" id="julyDate7">export last two weeks</button>
-                <button type="button" class="btn btn-primary me-5" id="julyDate30">export last Month</button>
-                <span class="me-1">Select Date:</span>
-                <input type="month" class="form-control w-auto" placeholder="please select date" id="customDateHandler">
+                <button type="button" class="btn btn-primary me-5" id="lastDate7">export last 14 days</button>
+                <button type="button" class="btn btn-primary me-5" id="lastDate30">export last 30 days</button>
+                <span class="me-1">Select Month:</span>
+                <input type="month" class="form-control w-auto" placeholder="please select month" id="customDateHandler">
             </div>
         </div>
     </div>
@@ -30,10 +30,10 @@
 
 <script>
     $(document).ready(function () {
-        $("#julyDate7").click(function (){
+        $("#lastDate7").click(function (){
             sendExportData(1,7)
         })
-         $("#julyDate30").click(function (){
+         $("#lastDate30").click(function (){
             sendExportData(1,30)
         })
         $("#customDateHandler").change(function (ev) {
@@ -51,13 +51,17 @@
             },
             success: (data)=>{
                 if(data instanceof Blob || typeof data === "string") {
-                    const blob = new Blob(["\ufeff",data],{type: 'text/csv'});
+                    const blob = new Blob([data],{type: 'text/csv'});
                     const a = document.createElement('a');
                     a.download = 'clock_table' + Date.now() + '.csv';
                     const url = window.URL.createObjectURL(blob);
                     a.href = url;
                     a.click()
                     window.URL.revokeObjectURL(url)
+                }else{
+                    if(data.data == null){
+                        window.alert("No data is found")
+                    }
                 }
             },
             async: true

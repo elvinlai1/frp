@@ -2,17 +2,22 @@ import json
 from datetime import datetime
 from urllib.parse import unquote
 
+from django.core import serializers
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from Myapp.models.employees import Employees
 from Myapp.models.race_user import User
 from Myapp.models.race_work import ClockList
+from Myapp.models.timestamps import Timestamps
 from Myapp.utils.timeUtils import secondsToHours
 from Myapp.views.index import isBlank
 from Myapp.utils.myEncoder import MyEncoder
 
-
+"""
+ old  Api
+"""
 # list
 def queryWorkList(request):
     user_list = User.objects.all().values('id', 'first_name');
@@ -116,3 +121,55 @@ def queryWorkListByName(request):
 def transform(str_param):
     param = {i[0]: unquote(i[1]).encode('utf-8').decode('utf-8') for i in [i.split('=') for i in str_param.split('&')]}
     return param
+"""
+ new  Api
+"""
+@api_view(['GET'])
+def queryActivity(request):
+    import datetime as dt
+    day = request.GET.get(('day'))
+    timestamps_list = Timestamps.objects.all().values()
+    if isBlank(day):
+        response_json = queryActivityListByEmp(list(timestamps_list))
+        return Response(response_json)
+    else:
+        day = int(day)
+        now_time = dt.datetime.now()
+        response_json = []
+        if day == 1:
+            action_time = now_time + dt.timedelta(days=-1)
+            response_json = list(
+                filter(lambda x: action_time < datetime.fromtimestamp(float(x['timestamp'])) < now_time,
+                       list(timestamps_list)))
+        elif day == 7:
+            action_time = now_time + dt.timedelta(days=-7)
+            response_json = list(
+                filter(lambda x: action_time < datetime.fromtimestamp(float(x['timestamp'])) < now_time,
+                       list(timestamps_list)))
+        elif day == 30:
+            action_time = now_time + dt.timedelta(days=-30)
+            response_json = list(
+                filter(lambda x: action_time < datetime.fromtimestamp(float(x['timestamp'])) < now_time,
+                       list(timestamps_list)))
+        return Response(queryActivityListByEmp(response_json))
+
+#  Query employees by timestamp
+def queryActivityListByEmp(timestamps):
+    data = []
+    for tmItem in timestamps:
+        emp_ts = datetime.fromtimestamp(float(tmItem['timestamp']))
+        time = emp_ts.strftime("%H:%M:%S")
+        date = emp_ts.strftime("%m/%d/%y")
+        current_tm = Employees.objects.filter(employee_number=tmItem['employee_number'])
+        ym_data = serializers.serialize('json', current_tm)
+        data.append({**tmItem, 'date': date, 'time': time, **json.loads(ym_data)[0]['fields']})
+    return data
+
+
+def isBlank(params):
+    if params is None:
+        return True
+    params = str(params).strip()
+    if len(params) == 0:
+        return True
+    return False

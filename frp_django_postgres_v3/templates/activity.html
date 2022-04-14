@@ -16,39 +16,25 @@
         <div class="row">
             <div class="mb-3 d-flex">
                 <select class="form-select w-auto" id="employee">
-                    <option selected value="">Select an employee</option>
-                    {% for item in user_list %}
-                    <option value="{{ item.first_name }}">{{ item.first_name }}</option>
-                    {% endfor %}
+                    <option selected value="">Select time here</option>
+                    <option value="1">Today</option>
+                    <option value="7">One Week</option>
+                    <option value="30">One Month</option>
                 </select>
-                <a href="{% url 'addView' %}" class="btn btn-primary ms-3">Add time for an employee</a>
             </div>
             <div class="mb-3 mt-3">
                 <div class="h3 fw-bold text-primary mb-3">Detail</div>
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th scope="col">Department</th>
+                        <th scope="col">Employee Number</th>
+                        <th scope="col">Employee Name</th>
                         <th scope="col">Date</th>
-                        <th scope="col">In</th>
-                        <th scope="col">Out</th>
-                        <th scope="col">Deduction</th>
-                        <th scope="col">Hour</th>
-                        <th scope="col">Notes</th>
-                        <th scope="col">Edit</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Status</th>
                     </tr>
                     </thead>
-                    <tbody id="tbody">
-                    <tr>
-                        <td>KFC</td>
-                        <td>5</td>
-                        <td>22</td>
-                        <td>5</td>
-                        <td>5</td>
-                        <td>5</td>
-                        <td>5</td>
-                    </tr>
-                    </tbody>
+                    <tbody id="tbody"></tbody>
                 </table>
             </div>
         </div>
@@ -59,13 +45,40 @@
 <script src="/static/js/jquery.dataTables.min.js"></script>
 <script src="/static/js/dataTables.bootstrap5.min.js"></script>
 <script>
+// New JS
         $(document).ready(function (){
-           queryTableList("")
+           queryTableActivity(null)
             $("#employee").change(function () {
-               queryTableList($(this).val())
+               queryTableActivity($(this).val())
             })
-
         })
+
+        const queryTableActivity = (day) => {
+             $.ajax({
+                type: 'GET',
+                url: '/admin/queryActivity',
+                data: {day: day},
+                dataType: 'json',
+                success: (res)=>{
+                    const data = res.data;
+                    let str = ""
+                    data.forEach(item => {
+                        str += `
+                            <tr>
+                            <td>${item.employee_number}</td>
+                            <td>${item.employee_name}</td>
+                            <td>${item.date}</td>
+                            <td>${item.time}</td>
+                            <td>${item.status ?? ''}</td>
+                        </tr>
+                        `
+                    })
+                    $("#tbody").html(str)
+                }
+            })
+        };
+
+// Old JS
         const queryTableList = (first_name) => {
              $.ajax({
                 type: 'GET',
