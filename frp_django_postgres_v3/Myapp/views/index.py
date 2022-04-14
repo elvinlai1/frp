@@ -1,16 +1,9 @@
-from django.db.models import Count
-from django.shortcuts import render
-from Myapp.models.race_user import User
-from Myapp.models.race_work import ClockList
 from Myapp.models.employees import Employees
-from Myapp.utils.timeUtils import time_format
-from Myapp.forms import NewUserForm
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-from Myapp.forms import newTimestamp
+from Myapp.models.timestamps import Timestamps
+from django.shortcuts import render
 
-# request.user.is_authenticated()
+from datetime import datetime
+
 def isBlank(params):
     if params is None:
         return True
@@ -19,8 +12,43 @@ def isBlank(params):
         return True
     return False
 
-
 def indexView(request):
+
+    timestamps = Timestamps.objects.all()
+
+
+    emp_activity=[]
+    for ts in timestamps:
+        
+        employee = Employees.objects.filter(employee_number=ts.employee_number)
+        #print(employee[0].employee_number)
+        
+        emp_ts = datetime.fromtimestamp(float(ts.timestamp))
+        time = emp_ts.strftime("%H:%M:%S")
+        date = emp_ts.strftime("%m/%d/%y")
+
+        emp_activity.append({
+            'name':employee[0].employee_name,
+            'number':ts.employee_number,
+            'department':employee[0].department,
+            'date': date,
+            'time':time,
+            'status': ts.status
+        })
+     
+        
+    return render(request, 'index.html', locals())  
+
+    '''
+
+    def isBlank(params):
+    if params is None:
+        return True
+    params = str(params).strip()
+    if len(params) == 0:
+        return True
+    return False
+
     current_date = time_format(format='%Y-%m-%d')
     # get all the data from 'work' table
     clock_list = ClockList.objects.filter(work_time__contains=current_date)
@@ -41,55 +69,12 @@ def indexView(request):
                                          department__iexact=prt['department']).distinct().count()
         prt['work'] = count
         prt['not_work'] = prt['count'] - count
-    return render(request, 'index.html', locals())
+
+    
+    '''
+   
 
 
-def register_request(request):
-    reg_emp = NewUserForm(request.POST)
-    if request.method=='POST':
-        action = request.POST["action"]
-        if action=="submit":
-            register_employee(request)
-        if action=="delete":
-            delete_employee(request)
-        if action=="timestamp":
-            register_timestamp(request)
-        
-    reg_emp = NewUserForm()
-    reg_ts = newTimestamp()
-    context = {
-        'reg':reg_emp,
-        'reg_ts':reg_ts
-    }
-    return render(request, 'register.html', context)
 
-def delete_employee(request):
-    x = request.POST['employee_delete']
-    try:
-        record = Employees.objects.get(employee_number = x)
-        record.delete()
-        messages.success(request, f'Employee Number {x} Deleted')
-        return HttpResponseRedirect('')
-       
-    except:
-        messages.error(request, f'Employee Number {x} does not exist')
-
-def register_employee(request):
-    form = NewUserForm(request.POST)
-    if form.is_valid():
-        form.save()
-        employee_number = form.cleaned_data.get('employee_number')
-        messages.info(request, f'Employee number: {employee_number} created') 
-        return HttpResponseRedirect('')
-    else: 
-        employee_number = request.POST.get('employee_number')
-        messages.error(request, f'Employee number: {employee_number} already exists')
-
-def register_timestamp(request):
-    form2 = newTimestamp(request.POST)
-    if form2.is_valid():
-        form2.save()
-
-     
 
 
