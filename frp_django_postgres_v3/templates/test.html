@@ -5,9 +5,9 @@
 
 {% include 'navbar.html' %}
 
-{% load crispy_forms_tags %}    
-
 {% block content %}
+
+{% load crispy_forms_tags %}    
     <main class="mt-5 pt-3">
         <div class="container-fluid">
 
@@ -28,8 +28,8 @@
                     <tbody>
                     {% for item in emp_activity %}
                     <tr>
-                        <td>{{ item.name}}</td>
-                        <td>{{ item.number }}</td>
+                        <td>{{ item.number}}</td>
+                        <td>{{ item.name }}</td>
                         <td>{{ item.department }}</td>
                         <td>{{ item.date }}</td>
                         <td>{{ item.time }}</td>
@@ -43,6 +43,14 @@
 
             <div class="mb-3 mt-3">
                 <div class="h3 fw-bold text-primary mb-3">Employee Log</div>
+           
+                <form action="{% url 'search' %}" method="post">     
+                    {% csrf_token %}    
+                    <div class="form-group">
+                        <input name="searched" type="number" class="form-control" placeholder="Employee Number">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
@@ -64,8 +72,6 @@
                     </tbody>
                 </table>
             </div>
-
-            
            
         </div>
     </main>

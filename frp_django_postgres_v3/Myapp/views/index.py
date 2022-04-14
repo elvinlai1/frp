@@ -8,6 +8,7 @@ from Myapp.forms import NewUserForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from Myapp.forms import newTimestamp
 
 # request.user.is_authenticated()
 def isBlank(params):
@@ -44,18 +45,23 @@ def indexView(request):
 
 
 def register_request(request):
-    form = NewUserForm(request.POST)
+    reg_emp = NewUserForm(request.POST)
     if request.method=='POST':
         action = request.POST["action"]
         if action=="submit":
             register_employee(request)
-          
         if action=="delete":
             delete_employee(request)
+        if action=="timestamp":
+            register_timestamp(request)
         
-    else:
-        form = NewUserForm()
-    return render(request, 'register.html', {'form':form})
+    reg_emp = NewUserForm()
+    reg_ts = newTimestamp()
+    context = {
+        'reg':reg_emp,
+        'reg_ts':reg_ts
+    }
+    return render(request, 'register.html', context)
 
 def delete_employee(request):
     x = request.POST['employee_delete']
@@ -79,6 +85,11 @@ def register_employee(request):
         employee_number = request.POST.get('employee_number')
         messages.error(request, f'Employee number: {employee_number} already exists')
 
+def register_timestamp(request):
+    form2 = newTimestamp(request.POST)
+    if form2.is_valid():
+        form2.save()
 
+     
 
 
