@@ -3,10 +3,11 @@ from .views import index, employees
 from .views import export
 from .views import activity
 from .views import test
+from .views import adminpanel
 
 urlpatterns = [
-    path('admin', index.register_request, name="admin"),
-    path('index', index.indexView),
+    path('admin', adminpanel.index, name="admin"),
+    path('', index.indexView),
     path('activity', activity.queryWorkList, name="activity"),
     path('queryList', activity.queryWorkListByName),
     path('export', export.exportView, name="export"),
