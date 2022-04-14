@@ -63,15 +63,15 @@ class Database:
             if self.conn is not None:
                 self.conn.close()
 
-    def register_NewFace(self, emp_num, emp_name, emp_face):
+    def register_NewFace(self, emp_num, emp_face):
         sql = ( 
             """
-            INSERT INTO face (emp_num, emp_name, emp_encodings)VALUES(%s,%s,%s);
+            INSERT INTO face (emp_num, emp_encodings)VALUES(%s,%s,%s);
             """
         )
         try: 
             cur = self.conn.cursor()
-            cur.execute(sql,[emp_num, emp_name, pickle.dumps(emp_face),])
+            cur.execute(sql,[emp_num, pickle.dumps(emp_face),])
             self.conn.commit()
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -104,7 +104,7 @@ class Database:
             cur.execute(sql)
             f = cur.fetchall()
             for x in f:
-                l = [x[0], x[1], pickle.loads(x[2])]
+                l = [x[0], pickle.loads(x[1])]
                 faces.append(l)
             return faces
             cur.close()

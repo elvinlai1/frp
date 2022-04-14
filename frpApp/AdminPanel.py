@@ -59,21 +59,9 @@ class Ui_AdminPanel(object):
         AdminPanel.resize(365, 417)
         self.centralwidget = QtWidgets.QWidget(AdminPanel)
         self.centralwidget.setObjectName("centralwidget")
-        self.firstNameLbl = QtWidgets.QLabel(self.centralwidget)
-        self.firstNameLbl.setGeometry(QtCore.QRect(20, 208, 165, 18))
-        self.firstNameLbl.setObjectName("firstNameLbl")
-        self.lastNameLbl = QtWidgets.QLabel(self.centralwidget)
-        self.lastNameLbl.setGeometry(QtCore.QRect(20, 240, 165, 18))
-        self.lastNameLbl.setObjectName("lastNameLbl")
         self.btnRegister = QtWidgets.QPushButton(self.centralwidget, clicked=lambda: self.register())
         self.btnRegister.setGeometry(QtCore.QRect(10, 280, 351, 26))
         self.btnRegister.setObjectName("btnRegister")
-        self.empFirstNameTxt = QtWidgets.QLineEdit(self.centralwidget)
-        self.empFirstNameTxt.setGeometry(QtCore.QRect(190, 200, 159, 26))
-        self.empFirstNameTxt.setObjectName("empFirstNameTxt")
-        self.empLastNameTxt = QtWidgets.QLineEdit(self.centralwidget)
-        self.empLastNameTxt.setGeometry(QtCore.QRect(190, 230, 159, 26))
-        self.empLastNameTxt.setObjectName("empLastNameTxt")
         self.statusTxtBox = QtWidgets.QPlainTextEdit(self.centralwidget)
         self.statusTxtBox.setGeometry(QtCore.QRect(10, 320, 351, 81))
         self.statusTxtBox.setAutoFillBackground(False)
@@ -160,16 +148,12 @@ class Ui_AdminPanel(object):
     def register(self):
         cv2.imwrite('img.jpg', face_image)
         face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
-
-        #addNewEmployee
-        empName = self.empFirstNameTxt.text() + " " + self.empLastNameTxt.text()
         empNum = self.empNumTxt.text()
-        
+    
         db = Database()
+        db.registerNewFace(empNum.strip(),face_encodings)
 
-        db.registerNewFace(empNum.strip(),empName.strip(),face_encodings)
-
-        self.statusTxtBox.setPlainText('Employee Name: ' + empName + '\n' + 'Employee Number: ' + empNum + '\n' + empName + ' has been registered in the database')
+        self.statusTxtBox.setPlainText('Employee Number: ' + empNum + ' has been registered in the database')
 
 
 class AdminPanel(QtWidgets.QMainWindow, Ui_AdminPanel):
