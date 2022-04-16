@@ -24,6 +24,7 @@ def get_Employee(request):
         emp_ts = datetime.fromtimestamp(float(e.timestamp))
         time = emp_ts.strftime("%H:%M:%S") 
         date = emp_ts.strftime("%m/%d/%y")   
+        print(time)
 
         emp2.append({
             'number':e.employee_number,

@@ -89,7 +89,7 @@ class VideoThread(QThread):
             matched_empData = all_empFaces[match.index(True)]
             empNum = matched_empData[0]
             empName = db.get_Employee(empNum)[0]
-            ts = time.localtime()
+            ts = time.time()
 
             #Can't clock out within 4 hours
             #self.handleEmpTimestamp()
