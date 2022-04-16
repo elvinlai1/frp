@@ -8,12 +8,8 @@ from django.http import HttpResponseRedirect
 
 def index(request):
     form = newTimestamp(request.POST)
-    if request.method =="POST":
-        action = request.POST["action"]
-        if action=="timestamp":
-            register_timestamp(request)
-    else:     
-        return render(request, 'test.html', {'form': form})
+  
+    return render(request, 'test.html', {'form': form})
 
 def get_Employee(request):    
     searched = request.POST["searched"]
@@ -36,8 +32,3 @@ def get_Employee(request):
     return render(request, 'test.html', {'searched':searched, 'emp2':emp2})
     
      
-def register_timestamp(request):
-    form = newTimestamp(request.POST)
-    if form.is_valid():
-        form.save()
-        return render(request, 'test.html', {'form':form})
