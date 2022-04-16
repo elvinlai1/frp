@@ -15,57 +15,6 @@ class Database:
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
-    
-    '''
-    def create_FaceTable(self):
-        sql = ( 
-            """
-            CREATE TABLE face(
-            emp_num VARCHAR PRIMARY KEY,
-            emp_name TEXT NOT NULL, 
-            emp_encodings BYTEA NOT NULL
-            );
-            """
-        )
-        try:
-            cur = self.conn.cursor()
-            # create table one by one
-            cur.execute(sql)
-            # close communication with the PostgreSQL database server
-            cur.close()
-            # commit the changes
-            self.conn.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-        finally:
-            if self.conn is not None:
-                self.conn.close()
-
-    def create_Timestamps(self):
-        sql = ( 
-            """
-            CREATE TABLE timestamps(
-            emp_num VARCHAR NOT NULL,
-            emp_timestamp VARCHAR NOT NULL,
-            emp_status VARCHAR NOT NULL
-            );
-            """
-        )
-        try:
-            cur = self.conn.cursor()
-            # create table one by one
-            cur.execute(sql)
-            # close communication with the PostgreSQL database server
-            cur.close()
-            # commit the changes
-            self.conn.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-        finally:
-            if self.conn is not None:
-                self.conn.close()
-
-    '''
 
     def register_NewFace(self, emp_num, emp_face):
         sql = ( 
@@ -114,14 +63,14 @@ class Database:
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
-    def get_AllEmployees(self):
+    def get_Employee(self, emp_num):
         sql = (""" 
-                SELECT * FROM employees; 
+                SELECT employee_name FROM employees WHERE employee_number = %s; 
                 """)
         try: 
             cur = self.conn.cursor()
-            cur.execute(sql)
-            return cur.fetchall()
+            cur.execute(sql, [emp_num,])
+            return cur.fetchone()
         except(Exception, psycopg2.DatabaseError) as error:
             print(error)
 
@@ -145,7 +94,7 @@ class Database:
         try: 
             cur = self.conn.cursor()
             cur.execute(sql,[emp_num,])
-            return cur.fetchall()
+            return cur.fetchone()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 

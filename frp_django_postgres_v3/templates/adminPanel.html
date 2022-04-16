@@ -22,7 +22,7 @@
 
       <form id="form" class="form" method="POST">
         {% csrf_token %}
-        <h2>Register User</h2>
+        <h2>Register Employee</h2>
         <div class="form-control">
             <label>{{ reg.employee_number.label }}</label>
             <div>{{ reg.employee_number }}</div>
@@ -38,7 +38,7 @@
  
       <form id="form" class="form" method="POST">
         {% csrf_token %}
-        <h2>Delete User</h2>
+        <h2>Delete Employee</h2>
         <div class="form-control" >
           <label>Employee Number</label>
           <input type="number" class="form-control" name="employee_delete">
@@ -47,21 +47,6 @@
         </div>
       </form>
 
-      <form id="form" class="form" action='' method="POST">
-        {% csrf_token %}
-        <h2>Create Timestamp</h2>
-        <div class="form-control">
-            <label>{{ reg_ts.employee_number.label }}</label>
-            <div>{{ reg_ts.employee_number }}</div>
-            <label>{{ reg_ts.timestamp.label }} (number only)</label>
-            <div >{{ reg_ts.timestamp }}</div>
-            <label>{{ reg_ts.status.label }}(in/out)</label>
-            <div>{{ reg_ts.status }}</div>
-          <input type="hidden" name="action" value="timestamp">
-          <input class="btn btn-primary" id="button" type="submit" value="Add" />
-
-          </div>
-      </form>
   </body>
 </html>
 </main>

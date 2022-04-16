@@ -17,7 +17,7 @@ from Database import *
 import time
 from datetime import datetime
 
-### hack job to designate qt cv2 plugin 
+### hack job to designate pyqt5 cv2 plugin 
 import os
 from PyQt5.QtCore import QLibraryInfo
 # from PySide2.QtCore import QLibraryInfo
@@ -85,10 +85,11 @@ class VideoThread(QThread):
 
         match = face_recognition.compare_faces(only_empFaces, face, 0.6)
         if True in match: 
-            matched_empData = all_employees[match.index(True)]
+            db = Database()
+            matched_empData = all_empFaces[match.index(True)]
             empNum = matched_empData[0]
-            empName = matched_empData[1]
-            ts = time.time()
+            empName = db.get_Employee(empNum)[0]
+            ts = time.localtime()
 
             #Can't clock out within 4 hours
             #self.handleEmpTimestamp()
@@ -102,7 +103,7 @@ class VideoThread(QThread):
         emp_ts = db.get_LastTimestamp(empNum)
         dt = datetime.fromtimestamp(ts)
         local_time = dt.strftime("%H:%M:%S")
-        #if employee already has record2
+        #if employee already has record
         if emp_ts:
             local_day = dt.strftime("%d")
             local_hour = dt.strftime("%H")
@@ -136,7 +137,7 @@ class VideoThread(QThread):
         if emp_ts:
             local_day = dt.strftime("%d")
             local_min = dt.strftime("%M")
-            emp_ts_date = datetime.fromtimestamp(float(emp_ts[0][1]))
+            emp_ts_date = datetime.fromtimestamp(float(emp_ts[2]))
             emp_ts_day = emp_ts_date.strftime("%d")
             emp_ts_min = emp_ts_date.strftime("%M")
             #if same day check for hour difference
@@ -146,7 +147,7 @@ class VideoThread(QThread):
                     infoBox = "Hello " + empName + "\n" + "You've clocked OUT at " + local_time
                     db.register_Timestamp(empNum,ts,"out")
                 #clock in immediately if last time stamp was out
-                if(emp_ts[0][2]=="out"):
+                if(emp_ts[3]=="out"):
                     infoBox = "Hello " + empName + "\n" + "You've clocked IN at " + local_time
                     db.register_Timestamp(empNum,ts,"in")
             #if last timestamp is not the same day, clock in        
@@ -236,6 +237,7 @@ class Ui_ClientWindow(object):
         event.accept()
 
     def ui_Updates(self):
+        #Handles ui updates
         time = QTime.currentTime()
         date = QDate.currentDate()
         time = time.toString('hh:mm:ss')
@@ -248,8 +250,6 @@ class Ui_ClientWindow(object):
         db = Database()
         global all_empFaces
         global only_empFaces
-        global all_employees
-        all_employees = db.get_AllEmployees()
         all_empFaces = db.get_AllFaces()
         empFaces = []
         for faces in all_empFaces:
@@ -257,7 +257,6 @@ class Ui_ClientWindow(object):
         only_empFaces =  []
         for faces in empFaces:
             only_empFaces.append(faces[0])
-        print(only_empFaces)
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
@@ -286,7 +285,6 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     a = ClientWindow()
     a.show()
-    #handles ui updates
     timer = QTimer(a)
     timer.timeout.connect(a.ui_Updates)
     timer.start(1000)

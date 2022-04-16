@@ -29,6 +29,6 @@ urlpatterns = [
     path('clock/add', activity.addHandler, name="addClockHandler"),
     path('employee/del', employees.deleteEmployee, name="deleteEmployee"),
     path('test', test.index, name="test"),
-    path('search', test.getEmployee, name="search"),
+    path('search', test.get_Employee, name="search"),
     path('queryActivity', activity.queryActivity, name="queryActivity"),
 ]

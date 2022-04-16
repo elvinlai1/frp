@@ -18,6 +18,6 @@ db3 = Database()
 getLastts = db3.get_LastTimestamp(111)
 #print(getLastts)
 
-employees = db.get_AllEmployees()
+employees =  db.get_Employee(111)[0]
 
 print(employees)
