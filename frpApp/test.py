@@ -1,3 +1,5 @@
+from datetime import datetime
+import time
 from Database import *
 
 db =  Database()
@@ -16,8 +18,15 @@ print('\n')
 
 db3 = Database()
 getLastts = db3.get_LastTimestamp(111)
-#print(getLastts)
+print(getLastts)
 
 employees =  db.get_Employee(111)[0]
 
 print(employees)
+
+
+dt = datetime.now()
+
+ts = datetime.timestamp(dt)
+local_time = dt.strftime("%H:%M:%S")
+print(local_time)
