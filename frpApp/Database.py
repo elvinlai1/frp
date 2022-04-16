@@ -15,6 +15,8 @@ class Database:
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
+    
+    '''
     def create_FaceTable(self):
         sql = ( 
             """
@@ -63,10 +65,12 @@ class Database:
             if self.conn is not None:
                 self.conn.close()
 
+    '''
+
     def register_NewFace(self, emp_num, emp_face):
         sql = ( 
             """
-            INSERT INTO face (emp_num, emp_encodings)VALUES(%s,%s,%s);
+            INSERT INTO face (employee_number, encodings)VALUES(%s,%s);
             """
         )
         try: 
@@ -83,7 +87,7 @@ class Database:
     def register_Timestamp(self, emp_num, ts, emp_status):
         sql = ( 
             """
-            INSERT INTO timestamps (emp_num, emp_timestamp, emp_status)VALUES(%s,%s,%s);
+            INSERT INTO timestamps (employee_number, timestamp, status)VALUES(%s,%s,%s);
             """
         )
         try: 
@@ -107,13 +111,23 @@ class Database:
                 l = [x[0], pickle.loads(x[1])]
                 faces.append(l)
             return faces
-            cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+    def get_AllEmployees(self):
+        sql = (""" 
+                SELECT * FROM employees; 
+                """)
+        try: 
+            cur = self.conn.cursor()
+            cur.execute(sql)
+            return cur.fetchall()
+        except(Exception, psycopg2.DatabaseError) as error:
             print(error)
 
     def get_AllTimestamp(self, emp_num):
         sql = ( """
-                SELECT * FROM timestamps WHERE emp_num = %s ORDER BY emp_timestamp DESC; 
+                SELECT * FROM timestamps WHERE employee_number = %s ORDER BY timestamp DESC; 
                 """
         )
         try: 
@@ -125,7 +139,7 @@ class Database:
 
     def get_LastTimestamp(self, emp_num):
         sql = ( """
-                SELECT * FROM timestamps WHERE emp_num = %s ORDER BY emp_timestamp DESC LIMIT 1; 
+                SELECT * FROM timestamps WHERE employee_number = %s ORDER BY timestamp DESC LIMIT 1; 
                 """
         )
         try: 

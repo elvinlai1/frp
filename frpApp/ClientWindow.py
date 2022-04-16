@@ -85,7 +85,7 @@ class VideoThread(QThread):
 
         match = face_recognition.compare_faces(only_empFaces, face, 0.6)
         if True in match: 
-            matched_empData = all_empFaces[match.index(True)]
+            matched_empData = all_employees[match.index(True)]
             empNum = matched_empData[0]
             empName = matched_empData[1]
             ts = time.time()
@@ -102,7 +102,7 @@ class VideoThread(QThread):
         emp_ts = db.get_LastTimestamp(empNum)
         dt = datetime.fromtimestamp(ts)
         local_time = dt.strftime("%H:%M:%S")
-        #if employee already has record
+        #if employee already has record2
         if emp_ts:
             local_day = dt.strftime("%d")
             local_hour = dt.strftime("%H")
@@ -248,13 +248,16 @@ class Ui_ClientWindow(object):
         db = Database()
         global all_empFaces
         global only_empFaces
+        global all_employees
+        all_employees = db.get_AllEmployees()
         all_empFaces = db.get_AllFaces()
         empFaces = []
         for faces in all_empFaces:
-            empFaces.append(faces[2])
+            empFaces.append(faces[1])
         only_empFaces =  []
         for faces in empFaces:
             only_empFaces.append(faces[0])
+        print(only_empFaces)
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):

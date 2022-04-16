@@ -98,8 +98,6 @@ class Ui_AdminPanel(object):
     def retranslateUi(self, AdminPanel):
         _translate = QtCore.QCoreApplication.translate
         AdminPanel.setWindowTitle(_translate("AdminPanel", "Admin Panel"))
-        self.firstNameLbl.setText(_translate("AdminPanel", "Employee First Name:"))
-        self.lastNameLbl.setText(_translate("AdminPanel", "Employee Last Name:"))
         self.btnRegister.setText(_translate("AdminPanel", "Register"))
         self.empNumLbl.setText(_translate("AdminPanel", "Employee Number:"))
 
@@ -146,14 +144,16 @@ class Ui_AdminPanel(object):
         return QPixmap.fromImage(p)
     
     def register(self):
-        cv2.imwrite('img.jpg', face_image)
         face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
         empNum = self.empNumTxt.text()
-    
+        
         db = Database()
-        db.registerNewFace(empNum.strip(),face_encodings)
+        db.register_NewFace(int(empNum.strip()),face_encodings)
 
         self.statusTxtBox.setPlainText('Employee Number: ' + empNum + ' has been registered in the database')
+
+      
+     
 
 
 class AdminPanel(QtWidgets.QMainWindow, Ui_AdminPanel):
