@@ -1,0 +1,147 @@
+{% if user.is_authenticated %}
+    <!--  If user is authenticated execute content below-->
+
+    {% load static %}
+
+    {% include 'navbar.html' %}
+
+    {% block content %}
+
+        <!-- offcanvas -->
+        <main class="mt-5 pt-3">
+            <div class="container">
+                <h4 class="mb-4 mt-2">Manual Adjustment > <span
+                        class="text-danger fw-bold">{{ id }}</span>
+                </h4>
+                <div class="card" style="background-color:rgba(13,202,240,.1);">
+                    <div class="card-body py-3">
+                        <div class="d-flex mb-3">
+                    <span
+                            class="d-inline-block me-3"
+                            style="width: 150px;text-align: right;font-weight: bold">Clock Date:</span>
+                            <input class="form-control" id="date" type="date" style="width: 200px"
+                                   value="{{ clock_item.date }}"/>
+                        </div>
+                        <div class="d-flex mb-3">
+                             <span
+                                     class="d-inline-block me-3"
+                                     style="width: 150px;text-align: right;font-weight: bold">Time in:</span>
+                            <input class="form-control" id="time"
+                                   type="time" style="width: 200px" value="{{ clock_item.time }}"/>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <span class="d-inline-block me-3"
+                                  style="width: 150px;text-align: right;font-weight: bold">Status:
+                            </span>
+                            <select class="form-control" id="status" style="width: 200px"
+                                    value="{{ clock_item.status }}">
+                                <option value="Out">Out</option>
+                                <option value="In">In</option>
+                            </select>
+                        </div>
+
+
+                        <div class="d-flex">
+                            <span class="d-inline-block me-3"
+                                  style="width: 150px;text-align: right;font-weight: bold"></span>
+                            <div class="flex-fill text-end">
+                                <button class="btn btn-danger" id="deleteBtn" data-id="{{ id }}">Delete</button>
+                                <button class="btn btn-success" data-id="{{ id }}" id="saveBtn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+        <script src="/static/js/jquery.dataTables.min.js"></script>
+        <script src="/static/js/dataTables.bootstrap5.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                // delete record
+                $("#deleteBtn").click(function () {
+                    const result = confirm("confirm delete record is =====>" + $(this).data('id'))
+                    if (result) {
+                        deleteRecord({id: $(this).data('id')})
+                    }
+                })
+                // save record
+                $("#saveBtn").click(function () {
+                    const id = $(this).data("id");
+                    const date = $("#date").val();
+                    const time = $("#time").val();
+                    const status = $("#status").val();
+                    editRecord({status, timer: `${date} ${time}`, id})
+                })
+            })
+
+            function editRecord(data) {
+                $.ajax({
+                    type: 'POST',
+                    url: `/frp/employeesEdit/edit`,
+                    contentType: 'application/json;charset=utf-8',
+                    data: JSON.stringify(data),
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    success: (res) => {
+                        if (res.code === 200) {
+                            window.alert("Record edit successfully!")
+                            window.history.back()
+                        } else {
+                            window.alert("Record edit error!")
+                        }
+                    }
+                })
+            }
+
+
+            function deleteRecord(data) {
+                $.ajax({
+                    type: 'POST',
+                    url: `/frp/employeesEdit/delete`,
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    contentType: 'application/json;charset=utf-8',
+                    data: JSON.stringify(data),
+                    dataType: 'json',
+                    success: (res) => {
+                        if (res.code === 200) {
+                            window.alert("Record deleted successfully!")
+                            window.history.back()
+                        } else {
+                            window.alert("Record deleted error!")
+                        }
+                    }
+                })
+            }
+
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+
+                }
+                return cookieValue;
+            }
+
+
+        </script>
+        <script>
+        </script>
+    {% endblock %}
+
+    <!-- Else send to Log in page-->
+{% else %}
+    {% include 'registration/out.html' %}
+{% endif %} 

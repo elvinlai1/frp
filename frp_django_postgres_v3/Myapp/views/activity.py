@@ -33,7 +33,7 @@ def addClockItem(request):
 def editClockItem(request, id):
     clock_item = ClockList.objects.get(id=id)
     print(datetime.strptime(clock_item.in_time, '%H:%M:%S'))
-    return render(request, 'editClock.html', locals())
+    return render(request, 'editTimestamps.html', locals())
 
 
 @api_view(["POST"])

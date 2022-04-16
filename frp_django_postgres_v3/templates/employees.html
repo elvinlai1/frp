@@ -1,150 +1,100 @@
 {% if user.is_authenticated %}
-<!--  If user is authenticated execute content below--> 
+    <!--  If user is authenticated execute content below-->
 
-{% load static %}
+    {% load static %}
 
-{% include 'navbar.html' %}
+    {% include 'navbar.html' %}
 
-{% block content %}
-<!-- offcanvas -->
-<main class="mt-5 pt-3">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="h4 fw-bold text-primary mb-3">
-                <h2>Employee Activity</h2>
+    {% block content %}
+        <!-- offcanvas -->
+        <main class="mt-5 pt-3">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="h4 fw-bold text-primary mb-3">
+                        <h2>Employee Activity</h2>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="mb-3 d-flex">
+                        <select class="form-select w-auto" id="employee">
+                            <option selected value="">Select Employees here</option>
+                            {% for us in emp_list %}
+                                <option value="{{ us.employee_number }}">{{ us.employee_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3 d-flex">
+                        {#<button class="btn btn-primary me-1">Create Employee</button>#}
+                        {% if user.is_superuser %}
+                            <button class="btn btn-danger" disabled id="deleteBtn">Delete Employee</button>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <table id="employeeTable"
+                               class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Employees Number</th>
+                                <th>Employees Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in data %}
+                                <tr>
+                                    <td>{{ item.employee_number }}</td>
+                                    <td>{{ item.employee_name }}</td>
+                                    <td>{{ item.date }}</td>
+                                    <td>{{ item.time }}</td>
+                                    <td>{{ item.status }}</td>
+                                    <td><a href="{% url 'editEmployees' item.id %}">Edit</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="mb-3 d-flex">
-                {#<button class="btn btn-primary me-1">Create Employee</button>#}
-                {% if user.is_superuser %}
-                <button class="btn btn-danger" disabled id="deleteBtn">Delete Employee</button>
-                {% endif %}
-            </div>
-            <div class="mb-3 mt-3">
-                <table id="employeeTable" data-employee="{{ user_list }}"
-                       class="table table-bordered table-striped"></table>
-            </div>
-        </div>
-    </div>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
 
-<script src="/static/js/jquery.dataTables.min.js"></script>
-<script src="/static/js/dataTables.bootstrap5.min.js"></script>
-<!-- Latest compiled and minified CSS -->
+        <script src="/static/js/jquery.dataTables.min.js"></script>
+        <script src="/static/js/dataTables.bootstrap5.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
-<script>
-            $(document).ready(function () {
-                const users = eval('' + $('#employeeTable').data('employee') + '')
-                $('#employeeTable').bootstrapTable({
-                    search: true, // set to ture to turn on search
-                    searchOnEnterKey: true,
-                    maintainSelected: true,
-                    idField: 'id',
-                    clickToSelect: true,
-                    onCheck: function (row, ev) {
-                        checkRow()
-                    },
-                    onUncheck: function (rowsAfter, rowsBefore) {
-                        checkRow()
-                    },
-                    onCheckAll: function (rowsAfter, rowsBefore) {
-                        checkRow()
-                    },
-                    onUncheckAll: function (rowsAfter, rowsBefore) {
-                        checkRow()
-                    },
-                    // Set placeholder in search bar
-                    onPostBody:function(){
-                       $('div.bootstrap-table.bootstrap4 > div.fixed-table-toolbar > div > .search-input').attr('placeholder','Search Employee Here')
-                    },
-                    columns: [
-                        {
-                            checkbox: true,
-                            field: 'selectItem'
-                        },
-                        {
-                            field: 'id',
-                            title: 'ID'
-                        }, {
-                            field: 'first_name',
-                            title: 'Name'
-                        }, {
-                            field: 'department',
-                            title: 'Department'
-                        }],
-                    data: users
-                })
-            })
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
 
-
-            function checkRow() {
-                const len = $('#employeeTable').bootstrapTable('getSelections').length;
-                $("#deleteBtn").attr('disabled', len <= 0)
-            }
-
-            $("#deleteBtn").click(function () {
-                const ids = $('#employeeTable').bootstrapTable('getSelections').map(item => item['id']);
-                if (confirm('Are you sure to delete?')) {
-                    delRecord({ids})
+        <script>
+            document.addEventListener("visibilitychange", function () {
+                if (document.visibilityState == "visible") {
+                    window.location.reload()
+                }
+                if (document.visibilityState == "hidden") {
                 }
             })
 
-            function delRecord(data) {
-                $.ajax({
-                    type: 'POST',
-                    url: `/admin/employee/del`,
-                    contentType: 'application/json;charset=utf-8',
-                    data: JSON.stringify(data),
-                    dataType: 'json',
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    success: (res) => {
-                        if (res.code === 200) {
-                            window.alert("Employee Delete successfully!")
-                            window.location.reload();
-                        } else {
-                            window.alert("Employee Delete error!")
-                        }
-                    },
-                    error: function (err) {
-                        window.alert("Employee Delete error!")
-                    }
-                })
-            }
+            $("#employee").change(function (){
+                window.location.href = `/frp/employees${$(this).val() ? '/' + $(this).val() : ''}`
+            })
 
-            window.onpageshow = function (event) {
-                if (event.persisted) {
-                    window.location.reload();
+            $(function (){
+                const ps = window.location.pathname.split('/');
+                if(!isNaN(ps[ps.length-1])){
+                    $("#employee").val(ps[ps.length-1])
+                }else{
+                    $("#employee").val('')
                 }
-            }
-            // CSRF verification
-            function getCookie(name) {
-                var cookieValue = null;
-                if (document.cookie && document.cookie != '') {
-                    var cookies = document.cookie.split(';');
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = jQuery.trim(cookies[i]);
-                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
+            })
+        </script>
+    {% endblock %}
 
-                }
-                return cookieValue;
-            }
-
-
-
-</script>
-{% endblock %}
-
-<!-- Else send to Log in page--> 
+    <!-- Else send to Log in page-->
 {% else %}
-{% include 'registration/out.html' %}
-{% endif %} 
+    {% include 'registration/out.html' %}
+{% endif %}

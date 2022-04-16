@@ -89,15 +89,14 @@ WSGI_APPLICATION = 'QtGui_Django.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 
-SQLITE3URL = os.path.join('C:\\Users\\Matt\\QtGui_Django2', 'sqlite3.db')
-
-#sqlLITE3
-#DATABASES = {
- #   'default': {
-  #      'ENGINE': 'django.db.backends.sqlite3',
-   #     'NAME': SQLITE3URL,
-    #}
-#}
+# SQLITE3URL = os.path.join(r'F:\python-project\frp_django_postgres_v3', 'sqlite3.db')
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': SQLITE3URL,
+#     }
+# }
 
 #postgress
 DATABASES = {
@@ -145,7 +144,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
@@ -168,95 +167,5 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     )
 }
-
-import logging.handlers
-log_path = os.path.join(BASE_DIR, "logs")
-if not os.path.exists(log_path):
-    os.makedirs("logs")
-
-DJANGO_LOG_LEVEL= logging.DEBUG
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'standard': {
-            'format': '[%(asctime)s][%(threadName)s:%(thread)d][task_id:%(name)s][%(filename)s:%(lineno)d]'
-                      '[%(levelname)s][%(message)s]'
-        },
-        'simple': {
-            'format': '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d]%(message)s'
-        },
-        'collect': {
-            'format': '%(message)s'
-        }
-    },
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        },
-        'default': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR ,'logs', "all.log"),  #
-            'maxBytes': 1024 * 1024 * 50,
-            'backupCount': 3,
-            'formatter': 'standard',
-            'encoding': 'utf-8',
-        },
-        'error': {
-            'level': 'ERROR',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR ,'logs', "error.log"),
-            'maxBytes': 1024 * 1024 * 50,
-            'backupCount': 5,
-            'formatter': 'standard',
-            'encoding': 'utf-8',
-        },
-        'collect': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR ,'logs', "collect.log"),
-            'maxBytes': 1024 * 1024 * 50,
-            'backupCount': 5,
-            'formatter': 'collect',
-            'encoding': "utf-8"
-        },
-        'scprits_handler': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR ,'logs', "script.log"),
-            'maxBytes': 1024 * 1024 * 5,
-            'backupCount': 5,
-            'formatter': 'standard',
-        }
-    },
-    'loggers': {
-        'django': {
-            # 'handlers': ['default','console', 'error'],
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'collect': {
-            'handlers': ['console', 'collect'],
-            'level': 'INFO',
-        },
-        'scripts': {
-            'handlers': ['scprits_handler'],
-            'level': 'INFO',
-            'propagate': False
-        },
-    },
-}
-# to redirect after login
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
